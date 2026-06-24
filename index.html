@@ -2,374 +2,71 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DRAK AI 1.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>DRAK AI 1.1</title>
   <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: radial-gradient(circle at top, #3b0b0b 0%, #090909 38%, #000 100%);
-      color: #fff;
-      min-height: 100vh;
-    }
-    .app {
-      max-width: 520px;
-      margin: 0 auto;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      padding: 14px;
-    }
-    header {
-      padding: 18px 8px 12px;
-      text-align: center;
-    }
-    .logo {
-      width: 76px;
-      height: 76px;
-      margin: 0 auto 10px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(145deg, #ff3b16, #701111, #140202);
-      box-shadow: 0 0 24px rgba(255, 65, 25, .55);
-      font-size: 34px;
-      font-weight: 900;
-      letter-spacing: -3px;
-    }
-    h1 { margin: 0; font-size: 28px; letter-spacing: 3px; }
-    .sub { margin-top: 5px; color: #ffb5a1; font-size: 13px; }
-    .version { color: #aaa; font-size: 12px; margin-top: 4px; }
-    .tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin: 10px 0 12px;
-    }
-    .tab {
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.07);
-      color: #fff;
-      padding: 11px 8px;
-      border-radius: 14px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .tab.active { background: #ff3b16; border-color: #ff3b16; }
-    .panel {
-      display: none;
-      flex: 1;
-      min-height: 0;
-    }
-    .panel.active { display: flex; flex-direction: column; }
-    .chatbox {
-      flex: 1;
-      overflow-y: auto;
-      padding: 12px;
-      border: 1px solid rgba(255,255,255,.11);
-      border-radius: 18px;
-      background: rgba(0,0,0,.35);
-      min-height: 420px;
-      max-height: 58vh;
-    }
-    .msg {
-      max-width: 88%;
-      padding: 11px 13px;
-      margin: 9px 0;
-      border-radius: 16px;
-      line-height: 1.35;
-      font-size: 15px;
-      white-space: pre-wrap;
-    }
-    .user { margin-left: auto; background: #ff3b16; color: #fff; border-bottom-right-radius: 4px; }
-    .bot { margin-right: auto; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.08); border-bottom-left-radius: 4px; }
-    .inputbar { display: flex; gap: 8px; margin-top: 10px; }
-    input, textarea, select {
-      width: 100%;
-      border: 1px solid rgba(255,255,255,.13);
-      background: rgba(255,255,255,.08);
-      color: #fff;
-      border-radius: 13px;
-      padding: 13px;
-      outline: none;
-      font-size: 15px;
-    }
-    input::placeholder, textarea::placeholder { color: #aaa; }
-    textarea { min-height: 95px; resize: vertical; }
-    button {
-      border: none;
-      border-radius: 13px;
-      padding: 12px 14px;
-      font-weight: 800;
-      cursor: pointer;
-      color: #fff;
-      background: #ff3b16;
-    }
-    .smallbtn { min-width: 48px; }
-    .card {
-      border: 1px solid rgba(255,255,255,.11);
-      background: rgba(0,0,0,.35);
-      border-radius: 18px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-    label { display: block; font-size: 13px; color: #ffb5a1; margin: 10px 0 6px; }
-    .memory-item {
-      padding: 10px;
-      border-radius: 12px;
-      background: rgba(255,255,255,.07);
-      margin: 8px 0;
-      font-size: 14px;
-    }
-    .row { display: flex; gap: 8px; }
-    .danger { background: #6b1111; }
-    .hint { color: #bbb; font-size: 13px; line-height: 1.45; }
-    footer { text-align: center; color: #777; font-size: 11px; padding: 12px 0 4px; }
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#050505;color:#fff;min-height:100vh}.app{max-width:520px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding:22px 16px 96px;background:radial-gradient(circle at top,#5b0b08 0,#130303 28%,#050505 72%)}.top{text-align:center;padding:22px 0 16px}.logo{width:108px;height:108px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;font-size:48px;font-weight:900;background:radial-gradient(circle at 35% 30%,#ff3b22,#490505 70%);box-shadow:0 0 38px rgba(255,48,24,.45)}h1{margin:0;font-size:42px;letter-spacing:8px}.sub{margin-top:10px;color:#f1d7d1;font-size:17px}.ver{margin-top:6px;color:#b9aaa7;font-size:15px}.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:22px 0}.tab{border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:16px 6px;text-align:center;font-weight:800;background:linear-gradient(180deg,#211816,#100c0b);color:#fff}.tab.active{background:#ff351e;border-color:#ff351e;box-shadow:0 0 22px rgba(255,53,30,.3)}.panel{display:none;flex:1;border:1px solid rgba(255,255,255,.09);border-radius:26px;background:rgba(0,0,0,.45);padding:16px;overflow:hidden}.panel.active{display:flex;flex-direction:column}.chatbox{flex:1;overflow:auto;padding:6px}.msg{max-width:88%;padding:15px 16px;border-radius:20px;margin:10px 0;font-size:17px;line-height:1.35}.bot{background:#1f1f1f;border:1px solid rgba(255,255,255,.08)}.user{margin-left:auto;background:#ff351e}.bar{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:520px;padding:12px 14px 18px;background:linear-gradient(180deg,rgba(5,5,5,.1),#050505 30%);display:flex;gap:10px}.mic,.send{border:0;border-radius:18px;font-weight:900;color:#fff;background:#ff351e}.mic{width:62px;font-size:22px}.send{width:86px;font-size:16px}input,textarea,select{width:100%;border:1px solid rgba(255,255,255,.14);background:#151515;color:#fff;border-radius:18px;padding:16px;font-size:16px;outline:none}textarea{min-height:120px;resize:vertical}.field{margin:10px 0}.btn{width:100%;border:0;border-radius:18px;padding:16px;margin-top:12px;font-weight:900;font-size:16px;color:#fff;background:#ff351e}.small{color:#bfb6b4;font-size:14px;line-height:1.4}.memoryItem{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:14px;margin:10px 0}.memoryItem b{color:#ffb3a8}.danger{background:#2b2b2b}.status{font-size:13px;color:#cbbfbd;text-align:center;margin-top:8px}@media(max-height:720px){.logo{width:82px;height:82px;font-size:38px}h1{font-size:34px}.top{padding-top:8px}.msg{font-size:16px}}
   </style>
 </head>
 <body>
-  <div class="app">
-    <header>
-      <div class="logo">D</div>
-      <h1>DRAK AI</h1>
-      <div class="sub">Seu assistente inteligente, ensinÃ¡vel e com voz</div>
-      <div class="version">VersÃ£o 1.0 â€¢ Criado por Raphael Bueno</div>
-    </header>
-
-    <div class="tabs">
-      <button class="tab active" onclick="openTab('chat', this)">Chat</button>
-      <button class="tab" onclick="openTab('teach', this)">Ensinar</button>
-      <button class="tab" onclick="openTab('memory', this)">MemÃ³ria</button>
-    </div>
-
-    <section id="chat" class="panel active">
-      <div id="chatbox" class="chatbox"></div>
-      <div class="inputbar">
-        <button class="smallbtn" onclick="startVoice()">ðŸŽ™ï¸</button>
-        <input id="userInput" placeholder="Fale ou digite: Drak, qual a meta?" onkeydown="if(event.key==='Enter') sendMessage()" />
-        <button onclick="sendMessage()">Enviar</button>
-      </div>
-    </section>
-
-    <section id="teach" class="panel">
-      <div class="card">
-        <h3>Ensinar o DRAK</h3>
-        <p class="hint">Aqui vocÃª ensina regras, respostas e informaÃ§Ãµes. O Drak salva no navegador do celular.</p>
-        <label>Categoria</label>
-        <select id="category">
-          <option>Geral</option>
-          <option>CaptaÃ§Ã£o</option>
-          <option>Vendas</option>
-          <option>Ranking</option>
-          <option>Metas</option>
-          <option>ObjeÃ§Ãµes</option>
-          <option>Equipe</option>
-          <option>Pessoal</option>
-        </select>
-        <label>Pergunta ou assunto</label>
-        <input id="teachQuestion" placeholder="Ex: Qual Ã© a meta de junho?" />
-        <label>Resposta correta</label>
-        <textarea id="teachAnswer" placeholder="Ex: A meta de junho Ã© 720 casais e R$ 15 milhÃµes de VGV."></textarea>
-        <button onclick="saveTeaching()">Salvar ensinamento</button>
-      </div>
-    </section>
-
-    <section id="memory" class="panel">
-      <div class="card">
-        <h3>MemÃ³ria do DRAK</h3>
-        <p class="hint">Tudo que vocÃª ensinar aparece aqui.</p>
-        <div id="memoryList"></div>
-        <div class="row">
-          <button onclick="exportMemory()">Exportar</button>
-          <button class="danger" onclick="clearMemory()">Apagar tudo</button>
-        </div>
-      </div>
-    </section>
-
-    <footer>DRAK AI 1.0 â€¢ Base inicial local</footer>
+<div class="app">
+  <div class="top">
+    <div class="logo">D</div>
+    <h1>DRAK AI</h1>
+    <div class="sub">Seu assistente inteligente, ensinÃ¡vel e com voz</div>
+    <div class="ver">VersÃ£o 1.1 â€¢ Criado por Raphael Bueno</div>
   </div>
 
-  <script>
-    const STORAGE_KEY = 'drak_memory_v1';
-    let memory = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  <div class="tabs">
+    <button class="tab active" onclick="openTab('chat')">Chat</button>
+    <button class="tab" onclick="openTab('teach')">Ensinar</button>
+    <button class="tab" onclick="openTab('memory')">MemÃ³ria</button>
+  </div>
 
-    const baseKnowledge = [
-      { category: 'Sistema', question: 'quem Ã© vocÃª', answer: 'Eu sou o DRAK AI, assistente inteligente criado para ajudar Raphael Bueno com gestÃ£o, vendas, captaÃ§Ã£o, relatÃ³rios e ideias.' },
-      { category: 'Sistema', question: 'o que vocÃª faz', answer: 'Eu converso, respondo perguntas, aprendo com o que vocÃª me ensina, guardo memÃ³ria local e posso evoluir para falar, analisar dados e controlar mÃ³dulos.' },
-      { category: 'CaptaÃ§Ã£o', question: 'captaÃ§Ã£o', answer: 'Na captaÃ§Ã£o, o foco Ã© gerar fluxo qualificado, controlar abordagens, pesquisas, casais em sala, vendas, VGV e eficiÃªncia.' },
-      { category: 'Metas', question: 'meta junho', answer: 'A meta de junho pode ser configurada por vocÃª. Exemplo usado: 720 casais e R$ 15.000.000 de VGV.' }
-    ];
+  <section id="chat" class="panel active">
+    <div id="chatbox" class="chatbox"></div>
+  </section>
 
-    function openTab(id, btn) {
-      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      btn.classList.add('active');
-      if (id === 'memory') renderMemory();
-    }
+  <section id="teach" class="panel">
+    <div class="small">Ensine o Drak. Ele vai guardar no celular e usar nas prÃ³ximas respostas.</div>
+    <div class="field"><input id="q" placeholder="Pergunta ou assunto. Ex: meta de junho"></div>
+    <div class="field"><textarea id="a" placeholder="Resposta correta ou informaÃ§Ã£o que o Drak deve lembrar"></textarea></div>
+    <button class="btn" onclick="teach()">Salvar ensinamento</button>
+    <div id="teachStatus" class="status"></div>
+  </section>
 
-    function addMsg(text, type) {
-      const box = document.getElementById('chatbox');
-      const div = document.createElement('div');
-      div.className = 'msg ' + type;
-      div.textContent = text;
-      box.appendChild(div);
-      box.scrollTop = box.scrollHeight;
-    }
+  <section id="memory" class="panel">
+    <div class="small">Conhecimento salvo no Drak 1.1.</div>
+    <div id="memoryList"></div>
+    <button class="btn danger" onclick="clearMemory()">Limpar memÃ³ria</button>
+  </section>
+</div>
 
-    function normalize(text) {
-      return (text || '')
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9 ]/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-    }
+<div class="bar">
+  <button class="mic" onclick="listen()">ðŸŽ™ï¸</button>
+  <input id="prompt" placeholder="Fale ou digite: Drak, qual a meta?" onkeydown="if(event.key==='Enter') send()">
+  <button class="send" onclick="send()">Enviar</button>
+</div>
 
-    function findAnswer(input) {
-      const q = normalize(input);
-      const all = [...memory, ...baseKnowledge];
+<script>
+const KEY='drak_memory_v11';
+let memory=JSON.parse(localStorage.getItem(KEY)||'[]');
+const chatbox=document.getElementById('chatbox');
 
-      let best = null;
-      let bestScore = 0;
-
-      all.forEach(item => {
-        const question = normalize(item.question);
-        const answer = normalize(item.answer);
-        const words = q.split(' ').filter(w => w.length > 2);
-        let score = 0;
-
-        words.forEach(w => {
-          if (question.includes(w)) score += 3;
-          if (answer.includes(w)) score += 1;
-        });
-
-        if (question && q.includes(question)) score += 8;
-        if (score > bestScore) {
-          bestScore = score;
-          best = item;
-        }
-      });
-
-      if (best && bestScore >= 3) return best.answer;
-
-      if (q.includes('oi') || q.includes('ola')) {
-        return 'Estou online, Raphael. Pode falar comigo. O que vocÃª quer que eu analise ou aprenda agora?';
-      }
-      if (q.includes('ensinar') || q.includes('aprenda') || q.includes('lembra')) {
-        return 'Para me ensinar, abra a aba Ensinar, coloque a pergunta ou assunto e a resposta correta. Eu vou guardar na minha memÃ³ria local.';
-      }
-      if (q.includes('voz') || q.includes('falar')) {
-        return 'Eu jÃ¡ tenho botÃ£o de microfone e posso responder por voz quando o navegador permitir. No celular, use o botÃ£o ðŸŽ™ï¸.';
-      }
-
-      return 'Ainda nÃ£o sei responder isso com seguranÃ§a. Me ensine na aba Ensinar para eu lembrar nas prÃ³ximas perguntas.';
-    }
-
-    function sendMessage() {
-      const input = document.getElementById('userInput');
-      const text = input.value.trim();
-      if (!text) return;
-      addMsg(text, 'user');
-      input.value = '';
-
-      setTimeout(() => {
-        const answer = findAnswer(text);
-        addMsg(answer, 'bot');
-        speak(answer);
-      }, 250);
-    }
-
-    function saveTeaching() {
-      const category = document.getElementById('category').value;
-      const question = document.getElementById('teachQuestion').value.trim();
-      const answer = document.getElementById('teachAnswer').value.trim();
-      if (!question || !answer) {
-        alert('Preencha a pergunta/assunto e a resposta correta.');
-        return;
-      }
-      memory.unshift({ category, question, answer, createdAt: new Date().toISOString() });
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(memory));
-      document.getElementById('teachQuestion').value = '';
-      document.getElementById('teachAnswer').value = '';
-      alert('DRAK aprendeu com sucesso.');
-    }
-
-    function renderMemory() {
-      const list = document.getElementById('memoryList');
-      list.innerHTML = '';
-      if (!memory.length) {
-        list.innerHTML = '<p class="hint">Nenhum ensinamento salvo ainda.</p>';
-        return;
-      }
-      memory.forEach((item, index) => {
-        const div = document.createElement('div');
-        div.className = 'memory-item';
-        div.innerHTML = `<b>${item.category}</b><br><b>P:</b> ${escapeHtml(item.question)}<br><b>R:</b> ${escapeHtml(item.answer)}<br><br><button class="danger" onclick="deleteMemory(${index})">Excluir</button>`;
-        list.appendChild(div);
-      });
-    }
-
-    function deleteMemory(index) {
-      memory.splice(index, 1);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(memory));
-      renderMemory();
-    }
-
-    function clearMemory() {
-      if (!confirm('Deseja apagar toda a memÃ³ria do DRAK?')) return;
-      memory = [];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(memory));
-      renderMemory();
-    }
-
-    function exportMemory() {
-      const content = JSON.stringify(memory, null, 2);
-      const blob = new Blob([content], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'memoria_drak.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function escapeHtml(text) {
-      return text.replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-    }
-
-    function startVoice() {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        alert('Seu navegador nÃ£o liberou reconhecimento de voz. Tente pelo Google Chrome.');
-        return;
-      }
-      const rec = new SpeechRecognition();
-      rec.lang = 'pt-BR';
-      rec.interimResults = false;
-      rec.maxAlternatives = 1;
-      rec.start();
-      rec.onresult = (event) => {
-        document.getElementById('userInput').value = event.results[0][0].transcript;
-        sendMessage();
-      };
-      rec.onerror = () => alert('NÃ£o consegui ouvir. Tente novamente.');
-    }
-
-    function speak(text) {
-      if (!('speechSynthesis' in window)) return;
-      window.speechSynthesis.cancel();
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = 'pt-BR';
-      utter.rate = 1;
-      utter.pitch = .9;
-      window.speechSynthesis.speak(utter);
-    }
-
-    addMsg('DRAK online. Fale ou digite uma pergunta. VocÃª tambÃ©m pode me ensinar novas respostas.', 'bot');
-  </script>
+function save(){localStorage.setItem(KEY,JSON.stringify(memory));renderMemory();}
+function normalize(t){return (t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+function addMsg(text,who='bot'){const d=document.createElement('div');d.className='msg '+who;d.textContent=text;chatbox.appendChild(d);chatbox.scrollTop=chatbox.scrollHeight;if(who==='bot') speak(text);}
+function boot(){addMsg('DRAK online. Fale ou digite uma pergunta. VocÃª tambÃ©m pode me ensinar novas respostas.');renderMemory();}
+function findAnswer(text){const n=normalize(text);let best=null;for(const item of memory){const q=normalize(item.q);if(n.includes(q)||q.includes(n)){best=item;break}}return best;}
+function send(){const inp=document.getElementById('prompt');const text=inp.value.trim();if(!text)return;inp.value='';addMsg(text,'user');const hit=findAnswer(text);setTimeout(()=>{if(hit){addMsg(hit.a)}else{addMsg('Ainda nÃ£o aprendi isso. VÃ¡ na aba Ensinar e cadastre a resposta correta. Em breve vou conectar com IA real para responder qualquer pergunta.')}},250)}
+function teach(){const q=document.getElementById('q').value.trim();const a=document.getElementById('a').value.trim();if(!q||!a){document.getElementById('teachStatus').textContent='Preencha a pergunta e a resposta.';return}memory.unshift({q,a,created:new Date().toLocaleString('pt-BR')});save();document.getElementById('q').value='';document.getElementById('a').value='';document.getElementById('teachStatus').textContent='Ensinamento salvo na memÃ³ria do Drak.';}
+function renderMemory(){const box=document.getElementById('memoryList');box.innerHTML='';if(memory.length===0){box.innerHTML='<div class="memoryItem">Nenhum ensinamento salvo ainda.</div>';return}memory.forEach((m,i)=>{const div=document.createElement('div');div.className='memoryItem';div.innerHTML='<b>'+escapeHtml(m.q)+'</b><br>'+escapeHtml(m.a)+'<br><span class="small">'+m.created+'</span>';box.appendChild(div);});}
+function clearMemory(){if(confirm('Limpar toda a memÃ³ria local do Drak?')){memory=[];save();}}
+function openTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');event.target.classList.add('active');renderMemory();}
+function listen(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){addMsg('Seu navegador nÃ£o liberou reconhecimento de voz. Digite sua pergunta no campo.');return}const r=new SR();r.lang='pt-BR';r.interimResults=false;r.onresult=e=>{document.getElementById('prompt').value=e.results[0][0].transcript;send();};r.onerror=()=>addMsg('NÃ£o consegui ouvir agora. Tente de novo ou digite.');r.start();}
+function speak(text){try{if(!('speechSynthesis' in window))return;const u=new SpeechSynthesisUtterance(text);u.lang='pt-BR';u.rate=1;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}catch(e){}}
+function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+boot();
+</script>
 </body>
 </html>
-
