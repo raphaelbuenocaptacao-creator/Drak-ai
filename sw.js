@@ -1,5 +1,6 @@
-const CACHE='drak-ai-pwa-v1';
-const APP_SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.svg','./icon-512.svg'];
+const CACHE='drak-ai-shell-v2';
+const APP_SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.svg','./icon-512.svg','./icon-512-maskable.svg'];
+const APP_SHELL_PATHS=new Set(APP_SHELL.map(item=>new URL(item,self.location.href).pathname));
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
@@ -9,26 +10,23 @@ self.addEventListener('activate',event=>{
   event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
 });
 
-function safe(request,url){
-  if(request.method!=='GET' || request.headers.has('authorization') || url.origin!==self.location.origin) return false;
+function isPrivateOrUnsafe(request,url){
+  if(request.method!=='GET' || url.origin!==self.location.origin) return true;
+  if(request.headers.has('authorization') || request.headers.has('cookie')) return true;
   const p=url.pathname.toLowerCase();
-  if(p.includes('/api/')||p.includes('/auth')||p.includes('/login')||p.includes('/admin')||p.includes('/session')||p.includes('/token')) return false;
-  return true;
+  return ['/api/','/auth','/login','/logout','/admin','/session','/token','/password','/profile','/account'].some(part=>p.includes(part));
 }
 
 self.addEventListener('fetch',event=>{
   const request=event.request;
   const url=new URL(request.url);
-  if(!safe(request,url)) return;
+  if(isPrivateOrUnsafe(request,url)) return;
+
   if(request.mode==='navigate'){
     event.respondWith(fetch(request).catch(()=>caches.match('./index.html')));
     return;
   }
-  event.respondWith(caches.match(request).then(cached=>cached||fetch(request).then(response=>{
-    if(response && response.ok && response.type==='basic'){
-      const copy=response.clone();
-      caches.open(CACHE).then(cache=>cache.put(request,copy));
-    }
-    return response;
-  })));
+
+  if(!APP_SHELL_PATHS.has(url.pathname)) return;
+  event.respondWith(caches.match(request).then(cached=>cached||fetch(request)));
 });
