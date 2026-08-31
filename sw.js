@@ -1,10 +1,30 @@
-const CACHE='drak-ai-shell-v5-safe';
+const CACHE='drak-ai-shell-v6-safe';
 const APP_SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.svg','./icon-512.svg','./icon-512-maskable.svg'];
 const APP_SHELL_PATHS=new Set(APP_SHELL.map(item=>new URL(item,self.location.href).pathname));
 const SENSITIVE_QUERY_KEYS=new Set(['token','access_token','refresh_token','password','passwd','secret','session','auth','authorization','api_key','apikey','key','code','credential','credentials']);
 
+function isCacheableResponse(response){
+  if(!response || !response.ok) return false;
+  const cacheControl=(response.headers.get('cache-control')||'').toLowerCase();
+  if(cacheControl.includes('private') || cacheControl.includes('no-store')) return false;
+  if(response.headers.has('set-cookie')) return false;
+  return true;
+}
+
 self.addEventListener('install',event=>{
-  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));
+  event.waitUntil((async()=>{
+    const cache=await caches.open(CACHE);
+    for(const asset of APP_SHELL){
+      try{
+        const request=new Request(asset,{cache:'reload',credentials:'omit'});
+        const response=await fetch(request);
+        if(isCacheableResponse(response)) await cache.put(request,response.clone());
+      }catch(error){
+        console.warn('[DRAK PWA] precache skipped:',asset,error);
+      }
+    }
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener('activate',event=>{
