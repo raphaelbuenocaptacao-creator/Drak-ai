@@ -1,4 +1,5 @@
-const CACHE='drak-ai-shell-v7-safe';
+const CACHE_PREFIX='drak-ai-shell-';
+const CACHE=`${CACHE_PREFIX}v8-safe`;
 const APP_SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.svg','./icon-512.svg','./icon-512-maskable.svg'];
 const APP_SHELL_PATHS=new Set(APP_SHELL.map(item=>new URL(item,self.location.href).pathname));
 const SENSITIVE_QUERY_KEYS=new Set(['token','access_token','refresh_token','password','passwd','secret','session','auth','authorization','api_key','apikey','key','code','credential','credentials']);
@@ -30,7 +31,7 @@ self.addEventListener('install',event=>{
 self.addEventListener('activate',event=>{
   event.waitUntil((async()=>{
     const keys=await caches.keys();
-    await Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)));
+    await Promise.all(keys.filter(k=>k.startsWith(CACHE_PREFIX)&&k!==CACHE).map(k=>caches.delete(k)));
     await self.clients.claim();
   })());
 });
