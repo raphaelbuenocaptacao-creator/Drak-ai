@@ -121,8 +121,31 @@ function speak(text){try{if(!('speechSynthesis' in window))return;window.speechS
 function listen(){try{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){alert('Seu navegador nÃ£o liberou reconhecimento de voz. Digite a mensagem.');return}const r=new SR();r.lang='pt-BR';r.interimResults=false;r.onresult=e=>{document.getElementById('userInput').value=e.results[0][0].transcript;sendMsg()};r.onerror=()=>alert('NÃ£o consegui acessar o microfone.');r.start()}catch(e){alert('NÃ£o consegui acessar o microfone.')}}
 function escapeHtml(str){return String(str).replace(/[&<>'"]/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[s]))}
 function init(){document.getElementById('hello').textContent='DRAK online para '+(profile.name||'Raphael Bueno')+'.';renderMemory();addMsg('DRAK 2.1 PRO online. Sou sua base sÃ©ria: chat, voz, memÃ³ria, ensino e perfil. Me ensine algo ou me faÃ§a uma pergunta.','bot')}
+let deferredInstallPrompt=null;
+window.DrakPWA={
+  install:async()=>{
+    if(!deferredInstallPrompt)return false;
+    deferredInstallPrompt.prompt();
+    const choice=await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt=null;
+    return choice?.outcome==='accepted';
+  }
+};
+window.addEventListener('beforeinstallprompt',event=>{
+  event.preventDefault();
+  deferredInstallPrompt=event;
+});
+window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;});
 if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost')){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(err=>console.warn('PWA SW:',err)));
+  window.addEventListener('load',async()=>{
+    try{
+      const registration=await navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'});
+      await registration.update();
+      document.addEventListener('visibilitychange',()=>{
+        if(document.visibilityState==='visible')registration.update().catch(()=>{});
+      });
+    }catch(err){console.warn('PWA SW:',err)}
+  });
 }
 init();
 </script>
