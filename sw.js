@@ -1,10 +1,10 @@
-const CACHE='drak-ai-shell-v6-safe';
+const CACHE='drak-ai-shell-v7-safe';
 const APP_SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.svg','./icon-512.svg','./icon-512-maskable.svg'];
 const APP_SHELL_PATHS=new Set(APP_SHELL.map(item=>new URL(item,self.location.href).pathname));
 const SENSITIVE_QUERY_KEYS=new Set(['token','access_token','refresh_token','password','passwd','secret','session','auth','authorization','api_key','apikey','key','code','credential','credentials']);
 
 function isCacheableResponse(response){
-  if(!response || !response.ok) return false;
+  if(!response || !response.ok || response.type!=='basic') return false;
   const cacheControl=(response.headers.get('cache-control')||'').toLowerCase();
   if(cacheControl.includes('private') || cacheControl.includes('no-store')) return false;
   if(response.headers.has('set-cookie')) return false;
@@ -28,7 +28,11 @@ self.addEventListener('install',event=>{
 });
 
 self.addEventListener('activate',event=>{
-  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+  event.waitUntil((async()=>{
+    const keys=await caches.keys();
+    await Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)));
+    await self.clients.claim();
+  })());
 });
 
 function hasSensitiveQuery(url){
@@ -52,10 +56,25 @@ self.addEventListener('fetch',event=>{
   if(isPrivateOrUnsafe(request,url)) return;
 
   if(request.mode==='navigate'){
-    event.respondWith(fetch(request,{cache:'no-store'}).catch(()=>caches.match('./index.html')));
+    event.respondWith((async()=>{
+      try{
+        return await fetch(request,{cache:'no-store'});
+      }catch{
+        return (await caches.match('./index.html')) || (await caches.match('./')) || Response.error();
+      }
+    })());
     return;
   }
 
   if(url.search || !APP_SHELL_PATHS.has(url.pathname)) return;
-  event.respondWith(caches.match(url.pathname).then(cached=>cached||fetch(request,{cache:'no-store'})));
+  event.respondWith((async()=>{
+    const cached=await caches.match(request);
+    if(cached) return cached;
+    const response=await fetch(request,{cache:'no-store'});
+    if(isCacheableResponse(response)){
+      const cache=await caches.open(CACHE);
+      await cache.put(request,response.clone());
+    }
+    return response;
+  })());
 });
