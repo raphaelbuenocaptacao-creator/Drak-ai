@@ -1,6 +1,6 @@
 const CACHE_PREFIX='drak-ai-shell-';
-const CACHE=`${CACHE_PREFIX}v9-safe-shell`;
-const APP_SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.svg','./icon-512.svg','./icon-512-maskable.svg'];
+const CACHE=`${CACHE_PREFIX}v10-raster-safe-shell`;
+const APP_SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-512-maskable.png'];
 const APP_SHELL_PATHS=new Set(APP_SHELL.map(item=>new URL(item,self.location.href).pathname));
 const SENSITIVE_QUERY_KEYS=new Set(['token','access_token','refresh_token','password','passwd','secret','session','auth','authorization','api_key','apikey','key','code','credential','credentials']);
 
