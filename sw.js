@@ -1,8 +1,16 @@
 const CACHE_PREFIX='drak-ai-shell-';
-const CACHE=`${CACHE_PREFIX}v10-raster-safe-shell`;
+const CACHE=`${CACHE_PREFIX}v11-private-vary-safe-shell`;
 const APP_SHELL=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png','./icon-512-maskable.png'];
 const APP_SHELL_PATHS=new Set(APP_SHELL.map(item=>new URL(item,self.location.href).pathname));
 const SENSITIVE_QUERY_KEYS=new Set(['token','access_token','refresh_token','password','passwd','secret','session','auth','authorization','api_key','apikey','key','code','credential','credentials']);
+
+function variesPrivate(response){
+  const vary=(response.headers.get('vary')||'').toLowerCase();
+  return vary.split(',').some(value=>{
+    const key=value.trim();
+    return key==='cookie' || key==='authorization';
+  });
+}
 
 function isCacheableResponse(response){
   if(!response || !response.ok || response.type!=='basic' || response.redirected) return false;
@@ -10,6 +18,7 @@ function isCacheableResponse(response){
   const cacheControl=(response.headers.get('cache-control')||'').toLowerCase();
   if(cacheControl.includes('private') || cacheControl.includes('no-store')) return false;
   if(response.headers.has('set-cookie')) return false;
+  if(variesPrivate(response)) return false;
   return true;
 }
 
