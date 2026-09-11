@@ -1,0 +1,38 @@
+name: Drak AI PWA Audit
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pwa-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate manifest
+        run: |
+          node -e "const fs=require('fs'); const m=JSON.parse(fs.readFileSync('manifest.webmanifest','utf8')); for (const k of ['name','short_name','start_url','display','theme_color','icons']) if (!m[k]) throw new Error('missing '+k); if(m.display!=='standalone') throw new Error('display must be standalone'); const sizes=new Set(m.icons.map(i=>i.sizes)); if(!sizes.has('192x192')||!sizes.has('512x512')) throw new Error('missing required icon sizes'); if(!m.icons.some(i=>(i.purpose||'').includes('maskable'))) throw new Error('missing maskable icon');"
+      - name: Validate PWA files
+        run: test -f index.html && test -f sw.js && test -f icon-192.png && test -f icon-512.png && test -f icon-512-maskable.png
+      - name: Validate safe cache policy
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const s=fs.readFileSync('sw.js','utf8').toLowerCase();
+          const required=["key==='range'","key==='if-range'","headers.has('authorization')","headers.has('cookie')","headers.has('range')","headers.has('if-range')","response.status===206","content-range","set-cookie","no-store","private"];
+          const missing=required.filter(x=>!s.includes(x));
+          if(missing.length) throw new Error('missing protections: '+missing.join(', '));
+          NODE
+      - name: Validate navigation is not cached
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const s=fs.readFileSync('sw.js','utf8');
+          const nav=s.match(/if\(request\.mode==='navigate'\)[\s\S]*?\n\s*}\n\s*\n/);
+          if(!nav) throw new Error('navigate handler not found');
+          if(/cache\.put|safePut/i.test(nav[0])) throw new Error('navigation must not be persisted to cache');
+          NODE
