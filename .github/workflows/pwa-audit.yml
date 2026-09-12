@@ -18,6 +18,18 @@ jobs:
           node -e "const fs=require('fs'); const m=JSON.parse(fs.readFileSync('manifest.webmanifest','utf8')); for (const k of ['name','short_name','start_url','display','theme_color','icons']) if (!m[k]) throw new Error('missing '+k); if(m.display!=='standalone') throw new Error('display must be standalone'); const sizes=new Set(m.icons.map(i=>i.sizes)); if(!sizes.has('192x192')||!sizes.has('512x512')) throw new Error('missing required icon sizes'); if(!m.icons.some(i=>(i.purpose||'').includes('maskable'))) throw new Error('missing maskable icon');"
       - name: Validate PWA files
         run: test -f index.html && test -f sw.js && test -f icon-192.png && test -f icon-512.png && test -f icon-512-maskable.png
+      - name: Validate service worker version alignment
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const sw=fs.readFileSync('sw.js','utf8');
+          const html=fs.readFileSync('index.html','utf8');
+          const match=sw.match(/CACHE=`\$\{CACHE_PREFIX\}([^`]+)`/);
+          if(!match) throw new Error('service worker cache version not found');
+          const version=match[1];
+          if(!html.includes(`./sw.js?v=${version}`)) throw new Error(`index.html must register sw.js?v=${version}`);
+          if(!html.includes("updateViaCache:'none'")) throw new Error('service worker registration must disable HTTP cache');
+          NODE
       - name: Validate safe cache policy
         run: |
           node - <<'NODE'
